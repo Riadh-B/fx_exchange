@@ -5,7 +5,7 @@ import time
 
 # Connect to PostgreSQL
 conn = psycopg2.connect(
-    dbname='scraping',
+    dbname='fx_exchange',
     user='postgres',
     password='1234',
     host='localhost',

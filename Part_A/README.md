@@ -14,7 +14,7 @@ This repository contains SQL and shell scripts for automating the calculation of
 ### Step 1: Set up the Database
 
 1. Update the `cronjob.sh` file with your PostgreSQL database credentials (DB_NAME, DB_USER, DB_PASSWORD).
-2. Place your CSV file in the appropriate location and update the `CSV_PATH` in `cronjob.sh`.
+2. Place CSV file in the appropriate location and update the `CSV_PATH` in `cronjob.sh`.
 
 ### Step 2: Run the Shell Script
 
@@ -28,8 +28,9 @@ Open the crontab configuration by typing:
 ```bash
 
 crontab -e
-Add the following line to run the cronjob.sh script every hour:
+```
 
 ```bash
 # Run the job every hour
-0 * * * * /path/to/your/repository/fx_rate_cron_job/cronjob.sh
+0 * * * * cronjob.sh
+```
