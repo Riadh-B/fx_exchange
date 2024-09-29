@@ -1,5 +1,5 @@
 WITH last_event_time AS (
-    -- Use now() as the current time instead of MAX(event_time)
+    -- Use now() as the current time
     SELECT extract(epoch from now()) * 1000 AS now_epoch
 ),
 active_rates AS (
@@ -13,8 +13,8 @@ active_rates AS (
     ORDER BY ccy_couple, event_time DESC
 ),
 yesterday_at_5pm AS (
-    -- Calculate 'yesterday 5 PM' in epoch time format
-    SELECT (DATE_TRUNC('day', now() AT TIME ZONE 'UTC') - interval '1 day' + interval '17 hour') AT TIME ZONE 'UTC' AS yesterday_5pm
+    -- Calculate 'yesterday at 5 PM New York time
+    SELECT (DATE_TRUNC('day', now() AT TIME ZONE 'America/New_York') - interval '1 day' + interval '17 hour') AT TIME ZONE 'America/New_York' AS yesterday_5pm
 ),
 yesterday_rates AS (
     -- Get the rates from yesterday at 5 PM New York time
