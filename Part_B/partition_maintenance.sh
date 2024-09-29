@@ -1,7 +1,4 @@
 #!/bin/bash
-export DB_NAME="fx_exchange"
-export DB_USER="postgres"
-export DB_PASSWORD="1234"
 # Configuration settings for partitioning, if needed
 export PARTITION_SIZE_DAYS=1
 
