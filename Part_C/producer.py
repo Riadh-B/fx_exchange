@@ -1,10 +1,15 @@
+import configparser
 import csv
 from time import sleep
 from confluent_kafka import Producer
 import json
 
-# Kafka producer configuration
-p = Producer({'bootstrap.servers': 'localhost:9092'})
+# Load configuration
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+# Kafka producer configuration using credentials from config.ini
+p = Producer({'bootstrap.servers': config['kafka']['bootstrap_servers']})
 
 def delivery_report(err, msg):
     """ Callback for when a message is delivered or an error occurs """
@@ -30,4 +35,4 @@ def produce_rates(csv_file):
             sleep(1)
 
 if __name__ == '__main__':
-    produce_rates('/home/riadh/Downloads/rates_sample.csv')
+    produce_rates('./Data/rates_sample.csv')

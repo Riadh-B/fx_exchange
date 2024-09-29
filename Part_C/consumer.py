@@ -1,25 +1,30 @@
+import configparser
 import psycopg2
 from confluent_kafka import Consumer, KafkaError
 import json
 import time
 
-# Connect to PostgreSQL
+# Load configuration
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+# Connect to PostgreSQL using credentials from config file
 conn = psycopg2.connect(
-    dbname='fx_exchange',
-    user='postgres',
-    password='1234',
-    host='localhost',
-    port='5432'
+    dbname=config['database']['dbname'],
+    user=config['database']['user'],
+    password=config['database']['password'],
+    host=config['database']['host'],
+    port=config['database']['port']
 )
 cur = conn.cursor()
 
-# Kafka consumer setup
-conf = {
-    'bootstrap.servers': "localhost:9092",
-    'group.id': "fx_rates_group",
+# Kafka consumer setup using configuration from config.ini
+consumer_conf = {
+    'bootstrap.servers': config['kafka']['bootstrap_servers'],
+    'group.id': config['kafka']['group_id'],
     'auto.offset.reset': 'earliest'
 }
-consumer = Consumer(conf)
+consumer = Consumer(consumer_conf)
 consumer.subscribe(['fx_rates'])
 
 # Insert rate into PostgreSQL
@@ -36,7 +41,6 @@ def process_message(message):
     rate_data = json.loads(message.value().decode('utf-8'))
     insert_rate_into_db(rate_data)
     
-    # Get the current active rate and yesterday's 5 PM rate
     sql_query = """
     WITH last_event_time AS (
         SELECT MAX(event_time) AS now_epoch
@@ -52,8 +56,7 @@ def process_message(message):
         ORDER BY ccy_couple, event_time DESC
     ),
     yesterday_at_5pm AS (
-        SELECT (DATE_TRUNC('day', to_timestamp(last_event_time.now_epoch / 1000) AT TIME ZONE 'UTC') - interval '1 day' + interval '17 hour') AT TIME ZONE 'UTC' AS yesterday_5pm
-        FROM last_event_time
+        SELECT (DATE_TRUNC('day', now() AT TIME ZONE 'America/New_York') - interval '1 day' + interval '17 hour') AT TIME ZONE 'America/New_York' AS yesterday_5pm
     ),
     yesterday_rates AS (
         SELECT DISTINCT ON (ccy_couple)
