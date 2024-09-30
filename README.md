@@ -1,4 +1,4 @@
-Here’s a main README.md that covers all parts of your project, including Part A (PostgreSQL setup and data processing), Part B (Partitioning and scheduling with cron jobs), and Part C (Real-time data streaming with Kafka and PostgreSQL). The guide also includes the use of configparser for secure credential management.
+Here’s a main README.md that covers all parts of the project, including Part A (PostgreSQL setup, data processing and scheduling with cron jobs), Part B (Partitioning and scheduling with cron jobs), and Part C (Real-time data streaming with Kafka and PostgreSQL). The guide also includes the use of configparser for secure credential management.
 
 # FX Exchange Rates Database Project
 This project is designed to manage and process high-frequency foreign exchange (FX) rates. It includes three main parts:
